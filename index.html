@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ViaBike — Bicicletas, Oficina e Aluguer · Viana do Castelo</title>
+  <meta name="description" content="Venda, reparação e aluguer de bicicletas em Darque, Viana do Castelo. Focus, Cervélo e Pinarello. Na N13 desde sempre, a pedalar o Minho.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,700;1,800&family=Barlow:wght@400;500&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <!-- ===== Fundo interativo: rota + colinas + linhas de velocidade ===== -->
+  <div class="fundo" aria-hidden="true">
+    <svg class="fundo__rota" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+      <!-- Traço base (estrada por percorrer) e traço ativo (desenhado pelo scroll) -->
+      <path class="rota__traco-base" d="M -40 120 C 220 80, 300 260, 520 230 S 880 120, 1040 240 S 760 520, 540 500 S 160 420, 60 600 S 420 820, 700 760 S 1000 860, 1060 940" pathLength="1000"/>
+      <path class="rota__traco" id="rotaTraco" d="M -40 120 C 220 80, 300 260, 520 230 S 880 120, 1040 240 S 760 520, 540 500 S 160 420, 60 600 S 420 820, 700 760 S 1000 860, 1060 940" pathLength="1000"/>
+      <!-- O "ciclista" que viaja ao longo da rota -->
+      <circle class="rota__ciclista-halo" id="rotaCiclistaHalo" r="14" cx="-40" cy="120"/>
+      <circle class="rota__ciclista" id="rotaCiclista" r="6" cx="-40" cy="120"/>
+    </svg>
+
+    <!-- Colinas do Minho em parallax -->
+    <svg class="fundo__colina fundo__colina--tras" id="colinaTras" viewBox="0 0 1440 220" preserveAspectRatio="none" height="220">
+      <path fill="currentColor" d="M0 220 L0 140 Q180 60 360 120 T720 90 T1080 130 T1440 80 L1440 220 Z"/>
+    </svg>
+    <svg class="fundo__colina fundo__colina--frente" id="colinaFrente" viewBox="0 0 1440 160" preserveAspectRatio="none" height="160">
+      <path fill="currentColor" d="M0 160 L0 100 Q240 30 480 90 T960 60 T1440 100 L1440 160 Z"/>
+    </svg>
+
+    <div class="fundo__velocidade"></div>
+  </div>
+
+  <!-- ===== Régua de telemetria ===== -->
+  <aside class="telemetria" aria-label="Progresso da página">
+    <div class="telemetria__bloco">
+      <div class="telemetria__rotulo">km</div>
+      <div class="telemetria__valor" id="telKm">0.0</div>
+    </div>
+    <div class="telemetria__barra"><div class="telemetria__barra-progresso" id="telBarra"></div></div>
+    <div class="telemetria__bloco">
+      <div class="telemetria__rotulo">vel</div>
+      <div class="telemetria__valor telemetria__valor--vel" id="telVel">0</div>
+    </div>
+  </aside>
+
+  <!-- ===== Topo ===== -->
+  <header class="topo">
+    <a class="topo__logo" href="#km0">Via<span>bike</span></a>
+    <nav class="topo__nav" aria-label="Navegação principal">
+      <a class="topo__link" href="#km12">Bicicletas</a>
+      <a class="topo__link" href="#km27">Oficina</a>
+      <a class="topo__link" href="#km43">Aluguer</a>
+      <a class="topo__link" href="#km58">Rotas</a>
+    </nav>
+    <a class="topo__tel" href="tel:+351258333174">258 333 174</a>
+  </header>
+
+  <main>
+    <!-- ===== KM 0 · Hero ===== -->
+    <section class="seccao hero" id="km0" data-km="0">
+      <!-- Prato pedaleiro que roda com o scroll -->
+      <svg class="hero__prato" id="heroPrato" viewBox="0 0 200 200" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="3">
+          <circle cx="100" cy="100" r="92" stroke-dasharray="8 6"/>
+          <circle cx="100" cy="100" r="64"/>
+          <circle cx="100" cy="100" r="10" fill="currentColor"/>
+          <path d="M100 36 L100 100 M100 100 L155 132 M100 100 L45 132 M100 100 L155 68 M100 100 L45 68" stroke-width="5"/>
+        </g>
+      </svg>
+
+      <p class="marco revelar"><strong>KM 0</strong> · Darque · N13 · Viana do Castelo</p>
+      <h1 class="titulo revelar revelar--atraso-1">Da N13 para <em>qualquer estrada.</em></h1>
+      <p class="texto revelar revelar--atraso-2">Venda, oficina e aluguer de bicicletas em Viana do Castelo. Estrada, gravel, BTT e e-bikes — com as marcas que correm o WorldTour e a oficina em que o Alto Minho confia.</p>
+      <div class="hero__acoes revelar revelar--atraso-3">
+        <a class="botao botao--cheio" href="#km12">Ver bicicletas</a>
+        <a class="botao botao--linha" href="#km43">Alugar hoje</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Fita de marcas ===== -->
+  <div class="fita" aria-hidden="true">
+    <div class="fita__faixa" id="fitaFaixa">
+      <span>Focus <b>·</b> Cervélo <b>·</b> Pinarello <b>·</b> Shimano <b>·</b> Mavic <b>·</b> Sidi <b>·</b> Giro <b>·</b> Endura <b>·</b></span>
+      <span>Focus <b>·</b> Cervélo <b>·</b> Pinarello <b>·</b> Shimano <b>·</b> Mavic <b>·</b> Sidi <b>·</b> Giro <b>·</b> Endura <b>·</b></span>
+    </div>
+  </div>
+
+  <main>
+    <!-- ===== KM 12 · Bicicletas ===== -->
+    <section class="seccao" id="km12" data-km="12">
+      <p class="marco revelar"><strong>KM 12</strong> · A loja</p>
+      <h2 class="titulo revelar">Média e alta gama. <em>Sem atalhos.</em></h2>
+      <div class="grelha-bicis">
+        <article class="carta revelar" data-tilt>
+          <span class="carta__numero">EST</span>
+          <svg class="carta__icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="17" r="4"/><circle cx="18" cy="17" r="4"/><path d="M6 17 L10 9 L15 9 M18 17 L14 9 M10 9 L8 6 H11"/></svg>
+          <h3 class="carta__titulo">Estrada</h3>
+          <p class="carta__texto">Cervélo e Pinarello para quem mede o Minho em watts.</p>
+          <span class="carta__etiqueta">Race · Endurance · Aero</span>
+        </article>
+        <article class="carta revelar revelar--atraso-1" data-tilt>
+          <span class="carta__numero">GRV</span>
+          <svg class="carta__icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="17" r="4"/><circle cx="18" cy="17" r="4"/><path d="M6 17 L10 9 L15 9 M18 17 L14 9 M10 9 L8 6 H11" stroke-dasharray="2 1.5"/></svg>
+          <h3 class="carta__titulo">Gravel</h3>
+          <p class="carta__texto">Da Ecovia aos trilhos da Serra d'Arga sem trocar de bicicleta.</p>
+          <span class="carta__etiqueta">Aventura · Bikepacking</span>
+        </article>
+        <article class="carta revelar revelar--atraso-2" data-tilt>
+          <span class="carta__numero">BTT</span>
+          <svg class="carta__icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="17" r="4"/><circle cx="18" cy="17" r="4"/><path d="M6 17 L10 10 L15 10 M18 17 L14 10 M10 10 L7 7 H10 M3 8 L6 5 M21 8 L18 5"/></svg>
+          <h3 class="carta__titulo">BTT</h3>
+          <p class="carta__texto">XC e trail da Focus, montadas e afinadas para o granito do norte.</p>
+          <span class="carta__etiqueta">XC · Trail · Enduro</span>
+        </article>
+        <article class="carta revelar revelar--atraso-3" data-tilt>
+          <span class="carta__numero">E-B</span>
+          <svg class="carta__icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="17" r="4"/><circle cx="18" cy="17" r="4"/><path d="M6 17 L10 9 L15 9 M18 17 L14 9"/><path d="M12 3 L10 7 H13 L11 11" stroke-width="1.8"/></svg>
+          <h3 class="carta__titulo">E-bikes</h3>
+          <p class="carta__texto">Quilómetros a mais, desculpas a menos. Para todos os dias.</p>
+          <span class="carta__etiqueta">Urbana · e-MTB</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== KM 27 · Oficina ===== -->
+    <section class="seccao seccao--escura" id="km27" data-km="27">
+      <div class="seccao__interior">
+        <p class="marco revelar"><strong>KM 27</strong> · A oficina</p>
+        <h2 class="titulo revelar">Entra a coxear, <em>sai a voar.</em></h2>
+        <p class="texto revelar">Reparações no próprio dia sempre que possível — peregrinos do Caminho e cicloturistas da EuroVelo passam aqui à frente. Quem está em viagem não pode esperar.</p>
+        <ul class="servicos">
+          <li class="servico revelar"><span class="servico__codigo">SRV-01</span><span class="servico__nome">Revisão completa</span><span class="servico__seta">-&gt;</span></li>
+          <li class="servico revelar"><span class="servico__codigo">SRV-02</span><span class="servico__nome">Travões e transmissão</span><span class="servico__seta">-&gt;</span></li>
+          <li class="servico revelar"><span class="servico__codigo">SRV-03</span><span class="servico__nome">Suspensões</span><span class="servico__seta">-&gt;</span></li>
+          <li class="servico revelar"><span class="servico__codigo">SRV-04</span><span class="servico__nome">Rodas e raiagem</span><span class="servico__seta">-&gt;</span></li>
+          <li class="servico revelar"><span class="servico__codigo">SRV-05</span><span class="servico__nome">SOS cicloturista — no próprio dia</span><span class="servico__seta">-&gt;</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== KM 43 · Aluguer ===== -->
+    <section class="seccao" id="km43" data-km="43">
+      <div class="aluguer">
+        <div>
+          <p class="marco revelar"><strong>KM 43</strong> · Aluguer</p>
+          <h2 class="titulo revelar">Chega a pé, <em>parte a pedalar.</em></h2>
+          <p class="texto revelar">A 1,5 km da Ponte Eiffel e a dois passos da Ecovia do Litoral Norte. Bicicletas revistas antes de cada saída, capacete e kit de furo incluídos. Entrega e recolha em Viana sob marcação.</p>
+        </div>
+        <aside class="aluguer__painel revelar revelar--atraso-1">
+          <h3>Tabela de aluguer</h3>
+          <ul class="aluguer__linhas">
+            <li><span>Cidade / passeio</span><span>½ dia · dia</span></li>
+            <li><span>Gravel / estrada</span><span>dia · fim-de-semana</span></li>
+            <li><span>e-Bike</span><span>dia · semana</span></li>
+            <li><span>Grupos &amp; Caminho de Santiago</span><span>sob consulta</span></li>
+          </ul>
+          <p class="aluguer__nota">EN · Bike rental on the Camino Português &amp; EuroVelo 1 — same-day support included.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===== KM 58 · Rotas ===== -->
+    <section class="seccao" id="km58" data-km="58">
+      <p class="marco revelar"><strong>KM 58</strong> · As rotas da casa</p>
+      <h2 class="titulo revelar">O melhor terreno de treino <em>do país.</em></h2>
+      <div class="rotas">
+        <article class="rota-painel revelar" data-parallax="0.10">
+          <svg class="rota-painel__perfil" viewBox="0 0 400 140" preserveAspectRatio="none"><path fill="currentColor" d="M0 140 L0 110 Q60 100 120 105 T240 95 T400 105 L400 140 Z"/></svg>
+          <h3 class="rota-painel__nome">Ecovia do Litoral Norte</h3>
+          <p class="rota-painel__dados">±35 km · plano · mar sempre à direita</p>
+        </article>
+        <article class="rota-painel revelar revelar--atraso-1" data-parallax="0.16">
+          <svg class="rota-painel__perfil" viewBox="0 0 400 140" preserveAspectRatio="none"><path fill="currentColor" d="M0 140 L0 120 Q80 110 140 70 T260 40 T400 90 L400 140 Z"/></svg>
+          <h3 class="rota-painel__nome">Serra d'Arga</h3>
+          <p class="rota-painel__dados">±60 km · 1400 m D+ · garrafas cheias</p>
+        </article>
+        <article class="rota-painel revelar revelar--atraso-2" data-parallax="0.22">
+          <svg class="rota-painel__perfil" viewBox="0 0 400 140" preserveAspectRatio="none"><path fill="currentColor" d="M0 140 L0 100 Q100 90 180 95 T320 80 T400 95 L400 140 Z"/></svg>
+          <h3 class="rota-painel__nome">Caminho Português</h3>
+          <p class="rota-painel__dados">Viana → Santiago · apoio de oficina</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Meta · Contacto ===== -->
+  <footer class="rodape" id="contacto">
+    <div class="rodape__interior">
+      <p class="marco revelar"><strong>META</strong> · Vem ver-nos</p>
+      <h2 class="titulo revelar">A loja fica na <em>tua rota.</em></h2>
+      <div class="rodape__grelha">
+        <div class="revelar">
+          <h4>Morada</h4>
+          <p>Rua das Flores, 177<br>Darque · 4935-125<br>Viana do Castelo</p>
+        </div>
+        <div class="revelar revelar--atraso-1">
+          <h4>Horário</h4>
+          <p>Seg–Sex · 9:00–12:30 / 14:00–19:00<br>Sáb · 9:00–13:00</p>
+        </div>
+        <div class="revelar revelar--atraso-2">
+          <h4>Contacto</h4>
+          <p><a href="tel:+351258333174">+351 258 333 174</a><br><a href="mailto:vianabike@hotmail.com">vianabike@hotmail.com</a></p>
+        </div>
+      </div>
+      <div class="rodape__fim">
+        <span>© ViaBike · Viana do Castelo</span>
+        <span>N13 · KM 0 → ∞</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
