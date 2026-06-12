@@ -18,7 +18,8 @@ export async function listarNovidades(): Promise<Novidade[]> {
   try {
     const { blobs } = await list({ prefix: FICHEIRO_LISTA, limit: 1 });
     if (blobs.length === 0) return [];
-    const resposta = await fetch(blobs[0].url, { cache: "no-store" });
+    // Cache-buster: a CDN do Blob serve o mesmo URL em cache após overwrites
+    const resposta = await fetch(`${blobs[0].url}?ts=${Date.now()}`, { cache: "no-store" });
     if (!resposta.ok) return [];
     return (await resposta.json()) as Novidade[];
   } catch {
@@ -32,5 +33,6 @@ export async function guardarNovidades(novidades: Novidade[]) {
     addRandomSuffix: false,
     allowOverwrite: true,
     contentType: "application/json",
+    cacheControlMaxAge: 60,
   });
 }

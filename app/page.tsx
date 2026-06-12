@@ -11,8 +11,9 @@ import { Aluguer } from "./componentes/Aluguer";
 import { RotasDaCasa } from "./componentes/RotasDaCasa";
 import { Rodape } from "./componentes/Rodape";
 
-// As novidades entram via revalidatePath quando o admin publica
-export const revalidate = 3600;
+// As novidades entram via revalidatePath; o ISR curto garante que
+// nunca fica mais de 1 minuto desatualizado
+export const revalidate = 60;
 
 export default function Home() {
   return (
