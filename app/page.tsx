@@ -1,17 +1,30 @@
+import { MotorDeScroll } from "./componentes/MotorDeScroll";
+import { FundoRota } from "./componentes/FundoRota";
+import { Telemetria } from "./componentes/Telemetria";
+import { Topo } from "./componentes/Topo";
+import { Hero } from "./componentes/Hero";
+import { FitaMarcas } from "./componentes/FitaMarcas";
+import { GrelhaBicicletas } from "./componentes/GrelhaBicicletas";
+import { Oficina } from "./componentes/Oficina";
+import { Aluguer } from "./componentes/Aluguer";
+import { RotasDaCasa } from "./componentes/RotasDaCasa";
+import { Rodape } from "./componentes/Rodape";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center">
-      <p className="font-dados text-sm tracking-[0.3em] text-sinal uppercase">
-        KM 0 · Darque, Viana do Castelo
-      </p>
-      <h1 className="font-display text-6xl font-extrabold italic uppercase leading-[0.92]">
-        ViaBike
-      </h1>
-      <p className="max-w-md font-corpo text-tinta/70">
-        Migração em curso — a aguardar os ficheiros do protótipo em{" "}
-        <code className="font-dados">/prototipo</code> para construir as
-        secções e o motor de scroll.
-      </p>
-    </main>
+    <MotorDeScroll>
+      <FundoRota />
+      <Telemetria />
+      <Topo />
+      <main>
+        <Hero />
+        <FitaMarcas />
+        <GrelhaBicicletas />
+        <Oficina />
+        <Aluguer />
+        <RotasDaCasa />
+      </main>
+      <Rodape />
+    </MotorDeScroll>
   );
 }
