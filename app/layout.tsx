@@ -22,11 +22,11 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ViaBike — Bicicletas, Oficina e Aluguer · Viana do Castelo",
+  title: "ViaBike · Bicicletas, Oficina e Aluguer · Viana do Castelo",
   description:
     "Venda, reparação e aluguer de bicicletas em Darque, Viana do Castelo. Focus, Cervélo e Pinarello. Na N13 desde sempre, a pedalar o Minho.",
   openGraph: {
-    title: "ViaBike — Bicicletas, Oficina e Aluguer · Viana do Castelo",
+    title: "ViaBike · Bicicletas, Oficina e Aluguer · Viana do Castelo",
     description:
       "Venda, reparação e aluguer de bicicletas em Darque, Viana do Castelo. Focus, Cervélo e Pinarello. Na N13 desde sempre, a pedalar o Minho.",
     locale: "pt_PT",

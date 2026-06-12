@@ -37,7 +37,7 @@ export function Aluguer() {
             </li>
           </ul>
           <p className="aluguer__nota">
-            EN · Bike rental on the Camino Português &amp; EuroVelo 1 — same-day support
+            EN · Bike rental on the Camino Português &amp; EuroVelo 1, same-day support
             included.
           </p>
         </aside>

@@ -1,8 +1,10 @@
+import Image from "next/image";
+
 export function Topo() {
   return (
     <header className="topo">
-      <a className="topo__logo" href="#km0">
-        Via<span>bike</span>
+      <a className="topo__logo" href="#km0" aria-label="ViaBike, voltar ao início">
+        <Image src="/viabike_logo.png" alt="ViaBike" width={204} height={192} priority />
       </a>
       <nav className="topo__nav" aria-label="Navegação principal">
         <a className="topo__link" href="#km12">Bicicletas</a>

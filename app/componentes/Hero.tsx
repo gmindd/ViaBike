@@ -10,7 +10,7 @@ export function Hero() {
     <section className="seccao hero" id="km0" data-km="0">
       {/* Prato pedaleiro que roda com o scroll */}
       <svg ref={refPrato} className="hero__prato" viewBox="0 0 200 200" aria-hidden="true">
-        <g fill="none" stroke="currentColor" strokeWidth={3}>
+        <g className="prato__aco" fill="none" stroke="currentColor" strokeWidth={3}>
           <circle cx={100} cy={100} r={92} strokeDasharray="8 6" />
           <circle cx={100} cy={100} r={64} />
           <circle cx={100} cy={100} r={10} fill="currentColor" />
@@ -19,6 +19,8 @@ export function Hero() {
             strokeWidth={5}
           />
         </g>
+        {/* O raio que faltava, no vermelho do logo */}
+        <path className="prato__raio-sinal" d="M100 100 L100 164" fill="none" strokeWidth={5} />
       </svg>
 
       <p className="marco revelar">
@@ -29,7 +31,7 @@ export function Hero() {
       </h1>
       <p className="texto revelar revelar--atraso-2">
         Venda, oficina e aluguer de bicicletas em Viana do Castelo. Estrada, gravel, BTT e
-        e-bikes — com as marcas que correm o WorldTour e a oficina em que o Alto Minho confia.
+        e-bikes, com as marcas que correm o WorldTour e a oficina em que o Alto Minho confia.
       </p>
       <div className="hero__acoes revelar revelar--atraso-3">
         <a className="botao botao--cheio" href="#km12">Ver bicicletas</a>

@@ -3,7 +3,7 @@ const SERVICOS = [
   { codigo: "SRV-02", nome: "Travões e transmissão" },
   { codigo: "SRV-03", nome: "Suspensões" },
   { codigo: "SRV-04", nome: "Rodas e raiagem" },
-  { codigo: "SRV-05", nome: "SOS cicloturista — no próprio dia" },
+  { codigo: "SRV-05", nome: "SOS cicloturista, no próprio dia" },
 ];
 
 /* KM 27 · Oficina — banda escura diagonal */
@@ -18,7 +18,7 @@ export function Oficina() {
           Entra a coxear, <em>sai a voar.</em>
         </h2>
         <p className="texto revelar">
-          Reparações no próprio dia sempre que possível — peregrinos do Caminho e cicloturistas
+          Reparações no próprio dia sempre que possível: peregrinos do Caminho e cicloturistas
           da EuroVelo passam aqui à frente. Quem está em viagem não pode esperar.
         </p>
         <ul className="servicos">

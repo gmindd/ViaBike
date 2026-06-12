@@ -23,7 +23,7 @@ Cores (CSS custom properties, manter os nomes):
 - `--cor-papel: #F2F3EF` (granito claro — fundo base)
 - `--cor-papel-2: #E7E9E3`
 - `--cor-tinta: #14171A` (asfalto — texto e banda escura)
-- `--cor-sinal: #FF4517` (laranja sinalética de prova — acento único)
+- `--cor-sinal: #D40D14` (vermelho do logo ViaBike — acento único)
 - `--cor-rio: #1E5A6E` (azul Lima — secundário frio)
 - `--cor-cromado: #C6CBCF`
 

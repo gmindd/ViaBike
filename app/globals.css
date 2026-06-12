@@ -7,10 +7,10 @@
 
 /* ---------- Variáveis ---------- */
 :root {
-  /* Cores — granito do Minho, asfalto da N13, sinalética de prova, rio Lima */
+  /* Cores — granito do Minho, asfalto da N13, vermelho do logo, rio Lima */
   --cor-papel:    #F2F3EF;
   --cor-tinta:    #14171A;
-  --cor-sinal:    #FF4517;
+  --cor-sinal:    #D40D14;
   --cor-rio:      #1E5A6E;
   --cor-cromado:  #C6CBCF;
   --cor-papel-2:  #E7E9E3;
@@ -174,15 +174,8 @@ body.a-acelerar .fundo__velocidade { opacity: 1; }
   backdrop-filter: blur(6px);
 }
 
-.topo__logo {
-  font-family: var(--fonte-display);
-  font-style: italic;
-  font-weight: 800;
-  font-size: 1.6rem;
-  letter-spacing: .02em;
-  text-transform: uppercase;
-}
-.topo__logo span { color: var(--cor-sinal); }
+.topo__logo { display: inline-flex; align-items: center; }
+.topo__logo img { height: 42px; width: auto; }
 
 .topo__nav { display: flex; gap: var(--esp-m); }
 .topo__link {
@@ -285,9 +278,11 @@ main { position: relative; z-index: 1; padding-left: var(--larg-telemetria); }
   top: 50%;
   width: clamp(280px, 38vw, 560px);
   margin-top: calc(clamp(280px, 38vw, 560px) / -2);
-  opacity: .10;
   will-change: transform;
 }
+/* Aço do prato quase invisível; o raio em falta leva o vermelho do logo */
+.hero__prato .prato__aco { opacity: .10; }
+.hero__prato .prato__raio-sinal { stroke: var(--cor-sinal); opacity: .9; }
 
 /* Fita de marcas (dentro do <main>, que já desconta a telemetria) */
 .fita {
@@ -389,7 +384,7 @@ main { position: relative; z-index: 1; padding-left: var(--larg-telemetria); }
   border-bottom: 1px solid rgba(242,243,239,.18);
   transition: background .2s, padding-left .25s ease;
 }
-.servico:hover { background: rgba(255,69,23,.08); padding-left: 1.2rem; }
+.servico:hover { background: rgba(212,13,20,.08); padding-left: 1.2rem; }
 .servico__codigo { font-family: var(--fonte-dados); font-size: .7rem; opacity: .5; }
 .servico__nome {
   font-family: var(--fonte-display);
@@ -522,7 +517,8 @@ main { position: relative; z-index: 1; padding-left: var(--larg-telemetria); }
   .topo__nav { display: none; }
   main, .fita, .rodape { margin-left: 0; padding-left: 0; }
   .seccao { padding: var(--esp-l) var(--esp-m); }
-  .hero__prato { right: -30vw; opacity: .07; }
+  .hero__prato { right: -30vw; }
+  .hero__prato .prato__aco { opacity: .07; }
   .aluguer { grid-template-columns: 1fr; gap: var(--esp-l); }
   body { padding-bottom: 52px; }
 }
