@@ -98,10 +98,21 @@ body {
   stroke-width: 2;
 }
 
-/* Colinas — duas camadas com velocidades de parallax diferentes */
-.fundo__colina { position: absolute; left: 0; right: 0; bottom: -4vh; will-change: transform; }
+/* Colinas — sempre fixas no fundo do ecrã, a toda a largura */
+.fundo__colina { position: absolute; left: 0; bottom: -4vh; width: 100%; }
 .fundo__colina--tras  { opacity: .05; }
 .fundo__colina--frente { opacity: .09; }
+
+/* Bicicletas que pedalam sobre as cristas das colinas (movidas pelo motor) */
+.fundo__bici {
+  position: absolute;
+  top: 0; left: 0;
+  will-change: transform;
+  /* fora do ecrã até o motor as pousar na colina */
+  transform: translate3d(-100px, -100px, 0);
+}
+.fundo__bici--frente { width: 44px; color: var(--cor-sinal); }
+.fundo__bici--tras { width: 30px; color: var(--cor-tinta); opacity: .35; }
 
 /* Linhas de velocidade: aparecem quando o scroll acelera */
 .fundo__velocidade {
@@ -486,7 +497,8 @@ main { position: relative; z-index: 1; padding-left: var(--larg-telemetria); }
 /* ---------- Oficina (KM 27) — banda escura ---------- */
 .seccao--escura {
   max-width: none;
-  background: var(--cor-tinta);
+  /* 35% de transparência: as animações do fundo continuam a ver-se */
+  background: rgba(20, 23, 26, .65);
   color: var(--cor-papel);
   clip-path: polygon(0 3.5vw, 100% 0, 100% calc(100% - 3.5vw), 0 100%);
   padding-block: calc(var(--esp-xl) + 3.5vw);
@@ -579,7 +591,8 @@ main { position: relative; z-index: 1; padding-left: var(--larg-telemetria); }
 .rodape {
   position: relative; z-index: 1;
   margin-left: var(--larg-telemetria);
-  background: var(--cor-tinta);
+  /* 35% de transparência, como a banda da oficina */
+  background: rgba(20, 23, 26, .65);
   color: var(--cor-papel);
   padding: var(--esp-xl) var(--esp-l) var(--esp-l);
 }
@@ -639,6 +652,8 @@ main { position: relative; z-index: 1; padding-left: var(--larg-telemetria); }
   .seccao { padding: var(--esp-l) var(--esp-m); }
   .hero__prato { right: -30vw; }
   .hero__prato .prato__aco { opacity: .07; }
+  .fundo__bici--frente { width: 32px; }
+  .fundo__bici--tras { width: 22px; }
   .aluguer { grid-template-columns: 1fr; gap: var(--esp-l); }
   body { padding-bottom: 52px; }
 }

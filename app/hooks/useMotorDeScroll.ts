@@ -51,11 +51,57 @@ export function useMotorDeScroll(refs: RefObject<RegistoMotor>) {
     const fita = r.fita as HTMLElement | null;
     const colinaTras = r.colinaTras as SVGElement | null;
     const colinaFrente = r.colinaFrente as SVGElement | null;
+    const biciTras = r.biciTras as HTMLElement | null;
+    const biciFrente = r.biciFrente as HTMLElement | null;
     const paineisParallax = document.querySelectorAll<HTMLElement>("[data-parallax]");
 
     if (!traco || !ciclista || !halo) return;
 
     const comprimentoRota = traco.getTotalLength();
+
+    // Tabelas (x → y, em frações 0–1) das cristas das colinas, para as
+    // bicicletas seguirem o relevo independentemente da resolução
+    type Crista = { x: number; y: number }[];
+    function construirCrista(path: SVGPathElement | null, larguraVB: number, alturaVB: number): Crista | null {
+      if (!path) return null;
+      const total = path.getTotalLength();
+      const pontos: Crista = [];
+      for (let i = 0; i <= 160; i++) {
+        const p = path.getPointAtLength((total * i) / 160);
+        pontos.push({ x: p.x / larguraVB, y: p.y / alturaVB });
+      }
+      return pontos;
+    }
+    const cristaTras = construirCrista(r.cristaTras as SVGPathElement | null, 1440, 220);
+    const cristaFrente = construirCrista(r.cristaFrente as SVGPathElement | null, 1440, 160);
+
+    function alturaNaCrista(crista: Crista, xFrac: number) {
+      if (xFrac <= crista[0].x) return crista[0].y;
+      for (let i = 1; i < crista.length; i++) {
+        if (crista[i].x >= xFrac) {
+          const a = crista[i - 1];
+          const b = crista[i];
+          const t = (xFrac - a.x) / (b.x - a.x || 1);
+          return a.y + (b.y - a.y) * t;
+        }
+      }
+      return crista[crista.length - 1].y;
+    }
+
+    // Pousa uma bicicleta na crista da colina, na fração de percurso pedida
+    function pousarBici(bici: HTMLElement | null, colina: SVGElement | null, crista: Crista | null, xFrac: number) {
+      if (!bici || !colina || !crista) return;
+      const caixa = colina.getBoundingClientRect();
+      const x = caixa.left + xFrac * caixa.width;
+      const y = caixa.top + alturaNaCrista(crista, xFrac) * caixa.height;
+      bici.style.transform = `translate3d(${x - bici.offsetWidth / 2}px, ${y - bici.offsetHeight + 2}px, 0)`;
+    }
+
+    // As bicicletas avançam para a direita com o progresso do scroll
+    function pedalarColinas(progresso: number) {
+      pousarBici(biciFrente, colinaFrente, cristaFrente, progresso);
+      pousarBici(biciTras, colinaTras, cristaTras, Math.max(0, progresso * 0.9));
+    }
 
     let scrollAlvo = window.scrollY; // posição real
     let scrollSuave = scrollAlvo;   // posição interpolada (lerp)
@@ -77,10 +123,8 @@ export function useMotorDeScroll(refs: RefObject<RegistoMotor>) {
       halo!.setAttribute("cy", String(ponto.y));
     }
 
-    // Parallax: colinas de fundo e perfis dos painéis de rotas
-    function aplicarParallax(s: number) {
-      if (colinaTras) colinaTras.style.transform = `translateY(${s * 0.03}px)`;
-      if (colinaFrente) colinaFrente.style.transform = `translateY(${s * 0.06}px)`;
+    // Parallax dos perfis dos painéis de rotas (as colinas ficam fixas)
+    function aplicarParallax() {
       paineisParallax.forEach((el) => {
         const fator = parseFloat(el.dataset.parallax ?? "0");
         const caixa = (el.closest(".rota-painel") ?? el).getBoundingClientRect();
@@ -115,8 +159,9 @@ export function useMotorDeScroll(refs: RefObject<RegistoMotor>) {
       scrollAnterior = scrollAlvo;
 
       desenharRota(progresso);
+      pedalarColinas(progresso);
       atualizarTelemetria(progresso, velocidade);
-      aplicarParallax(scrollSuave);
+      aplicarParallax();
       rodarPrato(scrollSuave);
       inclinarFita(velocidade);
       marcarAceleracao(velocidade);
