@@ -1,0 +1,540 @@
+@import "tailwindcss";
+
+/* ============================================================
+   VIABIKE — "A Volta"
+   Tokens → Tailwind → CSS do protótipo (fonte de verdade visual)
+   ============================================================ */
+
+/* ---------- Variáveis ---------- */
+:root {
+  /* Cores — granito do Minho, asfalto da N13, sinalética de prova, rio Lima */
+  --cor-papel:    #F2F3EF;
+  --cor-tinta:    #14171A;
+  --cor-sinal:    #FF4517;
+  --cor-rio:      #1E5A6E;
+  --cor-cromado:  #C6CBCF;
+  --cor-papel-2:  #E7E9E3;
+
+  /* Tipografia (carregada via next/font em app/layout.tsx) */
+  --fonte-display: var(--font-barlow-condensed), sans-serif;
+  --fonte-corpo:   var(--font-barlow), sans-serif;
+  --fonte-dados:   var(--font-ibm-plex-mono), monospace;
+
+  /* Espaços */
+  --esp-s:  .75rem;
+  --esp-m:  1.5rem;
+  --esp-l:  3rem;
+  --esp-xl: 6rem;
+
+  /* Régua de telemetria */
+  --larg-telemetria: 84px;
+}
+
+/* Tokens expostos ao Tailwind (bg-papel, text-sinal, font-dados, …) */
+@theme inline {
+  --color-papel: var(--cor-papel);
+  --color-papel-2: var(--cor-papel-2);
+  --color-tinta: var(--cor-tinta);
+  --color-sinal: var(--cor-sinal);
+  --color-rio: var(--cor-rio);
+  --color-cromado: var(--cor-cromado);
+
+  --font-display: var(--fonte-display);
+  --font-corpo: var(--fonte-corpo);
+  --font-dados: var(--fonte-dados);
+}
+
+/* ---------- Base ---------- */
+html { scroll-behavior: smooth; }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--fonte-corpo);
+  background: var(--cor-papel);
+  color: var(--cor-tinta);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--cor-sinal); color: var(--cor-papel); }
+
+/* ---------- Layout: fundo interativo ---------- */
+/* Camada fixa atrás de tudo: rota SVG + colinas em parallax */
+.fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.fundo__rota { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.fundo__rota .rota__traco-base {
+  fill: none;
+  stroke: var(--cor-tinta);
+  stroke-opacity: .08;
+  stroke-width: 3;
+  stroke-dasharray: 2 10;
+}
+
+.fundo__rota .rota__traco {
+  fill: none;
+  stroke: var(--cor-sinal);
+  stroke-width: 3;
+  stroke-linecap: round;
+  /* pathLength=1000 no SVG: o JS só mexe no offset */
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+
+.fundo__rota .rota__ciclista { fill: var(--cor-sinal); }
+.fundo__rota .rota__ciclista-halo {
+  fill: none;
+  stroke: var(--cor-sinal);
+  stroke-opacity: .35;
+  stroke-width: 2;
+}
+
+/* Colinas — duas camadas com velocidades de parallax diferentes */
+.fundo__colina { position: absolute; left: 0; right: 0; bottom: -4vh; will-change: transform; }
+.fundo__colina--tras  { opacity: .05; }
+.fundo__colina--frente { opacity: .09; }
+
+/* Linhas de velocidade: aparecem quando o scroll acelera */
+.fundo__velocidade {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    100deg,
+    transparent 0 46px,
+    rgba(20, 23, 26, .10) 46px 48px
+  );
+  opacity: 0;
+  transition: opacity .25s ease-out;
+}
+body.a-acelerar .fundo__velocidade { opacity: 1; }
+
+/* ---------- Régua de telemetria (fixa, à esquerda) ---------- */
+.telemetria {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: var(--larg-telemetria);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--esp-m) 0;
+  border-right: 1px solid rgba(20,23,26,.12);
+  font-family: var(--fonte-dados);
+  font-size: .65rem;
+  letter-spacing: .08em;
+  background: color-mix(in srgb, var(--cor-papel) 82%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.telemetria__bloco { text-align: center; }
+.telemetria__rotulo { opacity: .45; text-transform: uppercase; }
+.telemetria__valor {
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.telemetria__valor--vel { color: var(--cor-sinal); }
+
+.telemetria__barra {
+  flex: 1;
+  width: 3px;
+  margin: var(--esp-m) 0;
+  background: rgba(20,23,26,.12);
+  position: relative;
+  border-radius: 99px;
+}
+.telemetria__barra-progresso {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 0%;
+  background: var(--cor-sinal);
+  border-radius: 99px;
+}
+
+/* ---------- Topo ---------- */
+.topo {
+  position: fixed;
+  top: 0; left: var(--larg-telemetria); right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-m);
+  padding: var(--esp-s) var(--esp-l);
+  border-bottom: 1px solid rgba(20,23,26,.12);
+  background: color-mix(in srgb, var(--cor-papel) 82%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.topo__logo {
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.topo__logo span { color: var(--cor-sinal); }
+
+.topo__nav { display: flex; gap: var(--esp-m); }
+.topo__link {
+  font-family: var(--fonte-dados);
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  opacity: .65;
+  transition: opacity .2s, color .2s;
+}
+.topo__link:hover { opacity: 1; color: var(--cor-sinal); }
+
+.topo__tel {
+  font-family: var(--fonte-dados);
+  font-size: .75rem;
+  padding: .5em 1.1em;
+  border: 1.5px solid var(--cor-tinta);
+  border-radius: 99px;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.topo__tel:hover { background: var(--cor-sinal); border-color: var(--cor-sinal); color: var(--cor-papel); }
+
+/* ---------- Conteúdo ---------- */
+main { position: relative; z-index: 1; padding-left: var(--larg-telemetria); }
+
+.seccao {
+  position: relative;
+  padding: var(--esp-xl) var(--esp-l);
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+/* Marco quilométrico — eyebrow de cada paragem */
+.marco {
+  display: inline-flex;
+  align-items: center;
+  gap: .6em;
+  font-family: var(--fonte-dados);
+  font-size: .7rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  margin-bottom: var(--esp-m);
+}
+.marco::before {
+  content: '';
+  width: 34px; height: 1.5px;
+  background: var(--cor-sinal);
+}
+.marco strong { color: var(--cor-sinal); font-weight: 600; }
+
+/* Títulos de secção — itálico condensado, ADN de dorsal de prova */
+.titulo {
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: .92;
+  letter-spacing: -.01em;
+  font-size: clamp(2.6rem, 6vw, 4.6rem);
+}
+.titulo em { font-style: italic; color: var(--cor-sinal); }
+
+.texto { max-width: 56ch; margin-top: var(--esp-m); font-size: 1.05rem; opacity: .85; }
+
+/* ---------- Hero (KM 0) ---------- */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: calc(var(--esp-xl) + 40px);
+}
+
+.hero .titulo { font-size: clamp(3.4rem, 10vw, 8.2rem); max-width: 12ch; }
+
+.hero__acoes { display: flex; flex-wrap: wrap; gap: var(--esp-s); margin-top: var(--esp-l); }
+
+.botao {
+  display: inline-block;
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1.15rem;
+  letter-spacing: .04em;
+  padding: .7em 1.6em;
+  border-radius: 4px;
+  transition: transform .15s ease, background .2s, color .2s, box-shadow .2s;
+}
+.botao:hover { transform: translateY(-2px) skewX(-3deg); }
+.botao--cheio { background: var(--cor-sinal); color: var(--cor-papel); box-shadow: 4px 4px 0 var(--cor-tinta); }
+.botao--cheio:hover { box-shadow: 6px 6px 0 var(--cor-tinta); }
+.botao--linha { border: 2px solid var(--cor-tinta); }
+.botao--linha:hover { background: var(--cor-tinta); color: var(--cor-papel); }
+
+/* Prato pedaleiro: roda com o scroll (JS) */
+.hero__prato {
+  position: absolute;
+  right: -8vw;
+  top: 50%;
+  width: clamp(280px, 38vw, 560px);
+  margin-top: calc(clamp(280px, 38vw, 560px) / -2);
+  opacity: .10;
+  will-change: transform;
+}
+
+/* Fita de marcas (dentro do <main>, que já desconta a telemetria) */
+.fita {
+  position: relative;
+  z-index: 1;
+  border-block: 1.5px solid var(--cor-tinta);
+  background: var(--cor-papel);
+  overflow: hidden;
+  padding: .65rem 0;
+}
+.fita__faixa {
+  display: flex;
+  gap: 3rem;
+  width: max-content;
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  animation: fita-rolar 26s linear infinite;
+  will-change: transform;
+}
+.fita__faixa span { display: inline-flex; align-items: center; gap: 3rem; white-space: nowrap; }
+.fita__faixa b { color: var(--cor-sinal); font-weight: 700; }
+@keyframes fita-rolar { to { transform: translateX(-50%); } }
+
+/* ---------- Bicicletas (KM 12) — cartões com tilt ---------- */
+.grelha-bicis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: var(--esp-m);
+  margin-top: var(--esp-l);
+  perspective: 900px;
+}
+
+.carta {
+  position: relative;
+  background: var(--cor-papel-2);
+  border: 1.5px solid var(--cor-tinta);
+  border-radius: 6px;
+  padding: var(--esp-m);
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: box-shadow .25s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+  overflow: hidden;
+}
+.carta:hover { box-shadow: 8px 8px 0 var(--cor-sinal); }
+
+.carta__numero {
+  position: absolute;
+  top: .4rem; right: .9rem;
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 4.4rem;
+  opacity: .07;
+}
+.carta__icone { width: 56px; height: 56px; margin-bottom: auto; color: var(--cor-rio); }
+.carta__titulo {
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 1.7rem;
+}
+.carta__texto { font-size: .9rem; opacity: .75; margin-top: .35rem; }
+.carta__etiqueta {
+  margin-top: var(--esp-s);
+  font-family: var(--fonte-dados);
+  font-size: .65rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--cor-sinal);
+}
+
+/* ---------- Oficina (KM 27) — banda escura ---------- */
+.seccao--escura {
+  max-width: none;
+  background: var(--cor-tinta);
+  color: var(--cor-papel);
+  clip-path: polygon(0 3.5vw, 100% 0, 100% calc(100% - 3.5vw), 0 100%);
+  padding-block: calc(var(--esp-xl) + 3.5vw);
+}
+.seccao--escura .seccao__interior { max-width: 1200px; margin-inline: auto; }
+.seccao--escura .marco::before { background: var(--cor-sinal); }
+
+.servicos { margin-top: var(--esp-l); border-top: 1px solid rgba(242,243,239,.18); }
+.servico {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  align-items: center;
+  gap: var(--esp-m);
+  padding: 1.1rem .5rem;
+  border-bottom: 1px solid rgba(242,243,239,.18);
+  transition: background .2s, padding-left .25s ease;
+}
+.servico:hover { background: rgba(255,69,23,.08); padding-left: 1.2rem; }
+.servico__codigo { font-family: var(--fonte-dados); font-size: .7rem; opacity: .5; }
+.servico__nome {
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+}
+.servico__seta { color: var(--cor-sinal); font-family: var(--fonte-dados); }
+
+/* ---------- Aluguer (KM 43) ---------- */
+.aluguer { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--esp-xl); align-items: start; }
+
+.aluguer__painel {
+  background: var(--cor-rio);
+  color: var(--cor-papel);
+  border-radius: 6px;
+  padding: var(--esp-l);
+  box-shadow: 10px 10px 0 rgba(20,23,26,.9);
+}
+.aluguer__painel h3 {
+  font-family: var(--fonte-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+}
+.aluguer__linhas { margin-top: var(--esp-m); font-family: var(--fonte-dados); font-size: .8rem; }
+.aluguer__linhas li {
+  display: flex; justify-content: space-between; gap: 1rem;
+  padding: .6rem 0;
+  border-bottom: 1px dashed rgba(242,243,239,.3);
+}
+.aluguer__nota { margin-top: var(--esp-m); font-size: .8rem; opacity: .8; font-style: italic; }
+
+/* ---------- Rotas (KM 58) — painéis com parallax interno ---------- */
+.rotas { display: grid; gap: var(--esp-m); margin-top: var(--esp-l); }
+
+.rota-painel {
+  position: relative;
+  border: 1.5px solid var(--cor-tinta);
+  border-radius: 6px;
+  padding: var(--esp-l);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  background: var(--cor-papel-2);
+}
+.rota-painel__perfil {
+  position: absolute; inset: auto 0 0 0;
+  height: 70%;
+  color: var(--cor-rio);
+  opacity: .14;
+  will-change: transform;
+}
+.rota-painel__nome {
+  font-family: var(--fonte-display);
+  font-style: italic; font-weight: 800;
+  font-size: 1.9rem; text-transform: uppercase;
+  position: relative;
+}
+.rota-painel__dados {
+  font-family: var(--fonte-dados);
+  font-size: .7rem; letter-spacing: .1em;
+  color: var(--cor-sinal);
+  position: relative;
+}
+
+/* ---------- Contacto / rodapé ---------- */
+.rodape {
+  position: relative; z-index: 1;
+  margin-left: var(--larg-telemetria);
+  background: var(--cor-tinta);
+  color: var(--cor-papel);
+  padding: var(--esp-xl) var(--esp-l) var(--esp-l);
+}
+.rodape__interior { max-width: 1200px; margin-inline: auto; }
+.rodape .titulo { font-size: clamp(2.6rem, 7vw, 5.4rem); }
+.rodape__grelha {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--esp-l);
+  margin-top: var(--esp-l);
+  font-family: var(--fonte-dados);
+  font-size: .8rem;
+}
+.rodape__grelha h4 {
+  font-family: var(--fonte-display);
+  font-style: italic; font-weight: 700;
+  text-transform: uppercase; font-size: 1.1rem;
+  color: var(--cor-sinal);
+  margin-bottom: .6rem;
+}
+.rodape__grelha a:hover { color: var(--cor-sinal); }
+.rodape__fim {
+  margin-top: var(--esp-xl);
+  padding-top: var(--esp-m);
+  border-top: 1px solid rgba(242,243,239,.18);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--esp-s);
+  font-family: var(--fonte-dados); font-size: .65rem; opacity: .55;
+}
+
+/* ---------- Utilitários: reveals ---------- */
+.revelar { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+.revelar.visivel { opacity: 1; transform: none; }
+.revelar--atraso-1.visivel { transition-delay: .08s; }
+.revelar--atraso-2.visivel { transition-delay: .16s; }
+.revelar--atraso-3.visivel { transition-delay: .24s; }
+
+/* ---------- Media queries ---------- */
+@media (max-width: 880px) {
+  :root { --larg-telemetria: 0px; }
+
+  /* Telemetria passa a barra fina no fundo do ecrã */
+  .telemetria {
+    top: auto; bottom: 0; left: 0; right: 0;
+    width: auto; height: 52px;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0 var(--esp-m);
+    border-right: none;
+    border-top: 1px solid rgba(20,23,26,.12);
+  }
+  .telemetria__barra { flex: 1; width: auto; height: 3px; margin: 0 var(--esp-m); }
+  .telemetria__barra-progresso { top: 0; bottom: 0; left: 0; right: auto; width: 0%; height: 100%; }
+
+  .topo { left: 0; padding-inline: var(--esp-m); }
+  .topo__nav { display: none; }
+  main, .fita, .rodape { margin-left: 0; padding-left: 0; }
+  .seccao { padding: var(--esp-l) var(--esp-m); }
+  .hero__prato { right: -30vw; opacity: .07; }
+  .aluguer { grid-template-columns: 1fr; gap: var(--esp-l); }
+  body { padding-bottom: 52px; }
+}
+
+@media (min-width: 881px) {
+  .rotas { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ---------- Movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .fita__faixa { animation: none; }
+  .revelar { opacity: 1; transform: none; transition: none; }
+  .fundo__velocidade { display: none; }
+}
