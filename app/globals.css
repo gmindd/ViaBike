@@ -347,6 +347,33 @@ main { position: relative; z-index: 1; padding-left: var(--larg-telemetria); }
 }
 .carta:hover { box-shadow: 8px 8px 0 var(--cor-sinal); }
 
+/* Fundo com fotografia */
+.carta__foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+.carta__foto-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(20, 23, 26, .92) 0%,
+    rgba(20, 23, 26, .55) 45%,
+    rgba(20, 23, 26, .18) 100%
+  );
+  pointer-events: none;
+}
+.carta--com-foto { color: var(--cor-papel); }
+.carta--com-foto .carta__numero { color: var(--cor-papel); opacity: .12; }
+.carta--com-foto .carta__icone { color: rgba(242, 243, 239, .75); }
+.carta--com-foto .carta__texto { opacity: .88; }
+
+/* Cena SVG ilustrativa (fallback quando não há foto) */
 .carta__cena {
   position: absolute;
   inset: 0;
