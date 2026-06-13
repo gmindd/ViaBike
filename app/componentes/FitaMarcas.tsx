@@ -8,7 +8,7 @@ export function FitaMarcas() {
 
   const marcas = (
     <span>
-      Focus <b>·</b> Cervélo <b>·</b> Pinarello <b>·</b> Shimano <b>·</b> Mavic <b>·</b> Sidi{" "}
+      Focus <b>·</b> Cervélo <b>·</b> Pinarello <b>·</b> Orbea <b>·</b> 3T <b>·</b> Shimano <b>·</b> Mavic <b>·</b> Sidi{" "}
       <b>·</b> Giro <b>·</b> Endura <b>·</b>
     </span>
   );

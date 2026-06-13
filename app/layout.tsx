@@ -22,6 +22,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  icons: { icon: "/viabike_logo.png", shortcut: "/viabike_logo.png", apple: "/viabike_logo.png" },
   title: "ViaBike · Bicicletas, Oficina e Aluguer · Viana do Castelo",
   description:
     "Venda, reparação e aluguer de bicicletas em Darque, Viana do Castelo. Focus, Cervélo e Pinarello. Na N13 desde sempre, a pedalar o Minho.",

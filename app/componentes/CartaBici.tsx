@@ -8,11 +8,12 @@ type Props = {
   texto: string;
   etiqueta: string;
   icone: ReactNode;
+  cena?: ReactNode;
   atraso?: 1 | 2 | 3;
 };
 
 /* Cartão de bicicleta com tilt 3D (segue o rato) */
-export function CartaBici({ numero, titulo, texto, etiqueta, icone, atraso }: Props) {
+export function CartaBici({ numero, titulo, texto, etiqueta, icone, cena, atraso }: Props) {
   const refCarta = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export function CartaBici({ numero, titulo, texto, etiqueta, icone, atraso }: Pr
       className={`carta revelar${atraso ? ` revelar--atraso-${atraso}` : ""}`}
       data-tilt
     >
+      {cena && <div className="carta__cena" aria-hidden="true">{cena}</div>}
       <span className="carta__numero">{numero}</span>
       {icone}
       <h3 className="carta__titulo">{titulo}</h3>
